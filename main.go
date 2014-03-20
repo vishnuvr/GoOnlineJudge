@@ -8,6 +8,7 @@ func main() {
 	http.Handle("/static/", http.FileServer(http.Dir(".")))
 
 	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/news/", newsHandler)
 	http.HandleFunc("/problem/", problemHandler)
 	http.HandleFunc("/user/", userHandler)
 

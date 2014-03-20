@@ -9,10 +9,30 @@ import (
 
 // Page
 
+/*
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		c := &controller.HomeController{}
 		m := "Index"
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}*/
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		c := &controller.NewsController{}
+		m := "List"
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+func newsHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := &controller.NewsController{}
+		m := strings.Title(s[1])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
 	}

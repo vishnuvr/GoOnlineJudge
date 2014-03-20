@@ -23,7 +23,7 @@
         </div>
         <div id="navibar" class="span-3">
         <ul>
-          <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
+          <li>{{if .IsNews}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
           <li>{{if .IsProblem}}<span>Problem</span>{{else}}<a href="/problem/list">Problem</a>{{end}}</li>
         </ul>
       </div>
