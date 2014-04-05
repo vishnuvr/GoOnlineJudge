@@ -103,13 +103,7 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ret := make(map[string]interface{})
 	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &ret)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
 		http.Redirect(w, r, "/admin/news/list", http.StatusFound)
 	}
 }
@@ -165,17 +159,73 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path[6:])
-	nid, err := strconv.Itoa(args["nid"])
+	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/detail/"+strconv.Itoa(nid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news/detail/nid/"+strconv.Itoa(nid), "application/json", nil)
 	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one news
+	//one := make(map[string]interface{})
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["Detail"] = one
+	}
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{})
+	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/news_edit.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
 }
 
 func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin News Update")
 	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	nid, err := strconv.Atoi(args["nid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	one := make(map[string]interface{})
+	one["title"] = r.FormValue("title")
+	one["content"] = r.FormValue("content")
+
+	reader, err := this.PostReader(&one)
+	if err != nil {
+		http.Error(w, "read error", 500)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/news/update/nid/"+strconv.Itoa(nid), "application/json", reader)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	if response.StatusCode == 200 {
+		http.Redirect(w, r, "/news/detail/nid/"+strconv.Itoa(nid), http.StatusFound)
+	}
 }

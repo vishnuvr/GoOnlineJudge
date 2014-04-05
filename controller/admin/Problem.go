@@ -132,6 +132,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	reader, err := this.PostReader(&one)
 	if err != nil {
 		http.Error(w, "read error", 500)
+		return
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", reader)
