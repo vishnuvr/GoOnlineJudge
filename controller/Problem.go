@@ -3,9 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"encoding/json"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,16 +12,17 @@ import (
 type problem struct {
 	Pid int `json:"pid"bson:"pid"`
 
-	Time    int `json:"time"bson:"time"`
-	Memory  int `json:"memory"bson:"memory"`
-	Special int `json:"special"bson:"special"`
+	Time    int    `json:"time"bson:"time"`
+	Memory  int    `json:"memory"bson:"memory"`
+	Special int    `json:"special"bson:"special"`
+	Expire  string `json:"expire"bson:"expire"`
 
-	Title       string `json:"title"bson:"title"`
-	Description string `json:"description"bson:"description"`
-	Input       string `json:"input"bson:"input"`
-	Output      string `json:"output"bson:"output"`
-	Source      string `json:"source"bson:"source"`
-	Hint        string `json:"hint"bson:"hint"`
+	Title       string        `json:"title"bson:"title"`
+	Description template.HTML `json:"description"bson:"description"`
+	Input       template.HTML `json:"input"bson:"input"`
+	Output      template.HTML `json:"output"bson:"output"`
+	Source      string        `json:"source"bson:"source"`
+	Hint        string        `json:"hint"bson:"hint"`
 
 	In  string `json:"in"bson:"in"`
 	Out string `json:"out"bson:"out"`
@@ -52,27 +51,22 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	one := make(map[string][]*problem)
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err = this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["Problem"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus, "ShowExpire": class.ShowExpire})
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
+	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Problem List"
 	this.Data["IsProblem"] = true
 	err = t.Execute(w, this.Data)
@@ -102,15 +96,9 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	var one problem
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err = this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["Detail"] = one
@@ -124,7 +112,6 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "Problem Detial " + strconv.Itoa(pid)
-	this.Data["IsProblem"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

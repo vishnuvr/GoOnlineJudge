@@ -3,9 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"encoding/json"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,8 +12,8 @@ import (
 type news struct {
 	Nid int `json:"nid"bson:"nid"`
 
-	Title   string `json:"title"bson:"title"`
-	Content string `json:"content"bson:"content"`
+	Title   string        `json:"title"bson:"title"`
+	Content template.HTML `json:"content"bson:"content"`
 
 	Status int    `json:"status"bson:"status"`
 	Create string `json:"create"bson:'create'`
@@ -38,21 +36,15 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 
 	one := make(map[string][]*news)
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err = this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["News"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus})
 	t, err = t.ParseFiles("view/layout.tpl", "view/news_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -84,29 +76,22 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	var one news
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err = this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["Detail"] = one
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/news_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
-	this.Data["Title"] = ""
-	this.Data["IsNews"] = true
+	this.Data["Title"] = "News Detail"
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

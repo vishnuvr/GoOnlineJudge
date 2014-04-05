@@ -1,13 +1,12 @@
 {{define "content"}}
-<h2 class="compact">News List</h2>
+<h1>News List</h1>
 {{with .News}}
 	{{range .}}
 		{{if ShowStatus .Status}}
 			<p class="news">
 				<span class="flag"></span>
 				<span class="date">{{.Create}}</span>		
-				<br>{{.Title}}
-				<a href="/news/detail/nid/{{.Nid}}">[Details]</a>
+				<br><a href="/news/detail/nid/{{.Nid}}">{{.Title}}</a>
 			</p>
 		{{end}}
 	{{end}}

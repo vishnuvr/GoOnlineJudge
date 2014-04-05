@@ -14,6 +14,7 @@ type user struct {
 	Nick   string `json:"nick"bson:"nick"`
 	Mail   string `json:"mail"bson:"mail"`
 	School string `json:"school"bson:"school"`
+	Motto  string `json:"motto"bson:"motto"`
 
 	Privilege int `json:"privilege"bson:"privilege"`
 
@@ -28,19 +29,39 @@ type UserController struct {
 	class.Controller
 }
 
-func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
+func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Login")
 	this.Init(w, r)
 
 	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/layout.tpl", "view/user_login.tpl")
+	t, err := t.ParseFiles("view/layout.tpl", "view/user_signin.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
 	this.Data["Title"] = "User Sign In"
-	this.Data["IsUserLogin"] = true
+	this.Data["IsUserSignIn"] = true
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
+func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
+	log.Println("User Sign Up")
+	this.Init(w, r)
+
+	t := template.New("layout.tpl")
+	t, err := t.ParseFiles("view/layout.tpl", "view/user_signup.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	this.Data["Title"] = "User Sign Up"
+	this.Data["IsUserSignUp"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

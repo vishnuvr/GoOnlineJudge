@@ -2,6 +2,7 @@ package main
 
 import (
 	"GoOnlineJudge/controller"
+	"GoOnlineJudge/controller/admin"
 	"net/http"
 	"reflect"
 	"strings"
@@ -9,15 +10,6 @@ import (
 
 // Page
 
-/*
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		c := &controller.HomeController{}
-		m := "Index"
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
-}*/
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		c := &controller.NewsController{}
@@ -49,12 +41,54 @@ func problemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func statusHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := &controller.StatusController{}
+		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+func ranklistHandler(w http.ResponseWriter, r *http.Request) {
+	c := &controller.RanklistController{}
+	m := "Index"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
+}
+
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
 	if l := len(s); l >= 2 {
 		c := &controller.UserController{}
 		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+// Admin
+
+func adminNewsHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 3 {
+		c := &admin.NewsController{}
+		m := strings.Title(s[2])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+func adminProblemHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 3 {
+		c := &admin.ProblemController{}
+		m := strings.Title(s[2])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
 	}

@@ -1,10 +1,7 @@
 {{define "content"}}
 	{{with .Detail}}
-		<h2>{{.Title}}</h2>
-		<p>
-			<b>Date: </b>
-			{{.Create}}
-		</p>
+		<h1>{{.Title}}</h1>
+		<p><b>Date: </b>{{.Create}}</p>
 		{{.Content}}
 	{{end}}
 {{end}}
