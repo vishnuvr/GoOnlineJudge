@@ -12,7 +12,6 @@
     <div class="field">
     	<label for="news_content">Content</label><br>
     	<input id="news_content" name="content" size="60" type="text" value="{{.Content}}">
-    </div>
     <div class="actions">
       <input name="commit" type="submit" value="Submit">
     </div>
@@ -20,9 +19,9 @@
 {{end}}
 <script>
 var options = {
-	height: '250px',
-	langType : 'en',
-	items: [
+    height: '250px',
+    langType : 'en',
+    items: [
         'source', '|', 'undo', 'redo', '|', 
         'preview', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 
         'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 
@@ -31,7 +30,7 @@ var options = {
         'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 
         'removeformat', '|', 'image', 'multiimage','table', 'hr', 
         'emoticons', 'baidumap', 'link', 'unlink', '|', 'about'
-	]
+    ]
 }
 
 KindEditor.ready(function(K) {

@@ -24,22 +24,22 @@
       </div>
     </div>
     <div id="problemContent">
-      <p><b>Description:</b></p>
+      <p class="submitRes-1"><b>Description:</b></p>
       <p>{{.Description}}</p>
-      <p><b>Input:</b></p>
+      <p class="submitRes-1"><b>Input:</b></p>
       <p>{{.Input}}</p>
-      <p><b>Output:</b></p>
+      <p class="submitRes-1"><b>Output:</b></p>
       <p>{{.Output}}</p>
-      <b>Sample Input:</b>
+      <b class="submitRes-1">Sample Input:</b>
       <pre>{{.In}}</pre>
-      <b>Sample Output:</b>
+      <b class="submitRes-1">Sample Output:</b>
       <pre>{{.Out}}</pre>
       {{if .Hint}}
-        <p><b>Hint:</b></p>
+        <p class="submitRes-1"><b>Hint:</b></p>
         <p>{{.Hint}}</p>
       {{end}}
       {{if .Source}}
-        <p><b>Source:</b></p>
+        <p class="submitRes-1"><b>Source:</b></p>
         <p>{{.Source}}</p>
       {{end}}
     </div>

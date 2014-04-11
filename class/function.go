@@ -5,6 +5,7 @@ import (
 )
 
 var specialArr = []string{"Standard", "Special"}
+var specialCheckedArr = []string{"", "checked"}
 var judgeArr = []string{"None", "Pengding", "Running & Judging", "Accept", "Compile Error", "Runtime Error", "Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded"}
 var languageArr = []string{"None", "C", "C++", "Java"}
 
@@ -35,5 +36,10 @@ func ShowJudge(num int) (judge string) {
 
 func ShowLanguage(num int) (language string) {
 	language = languageArr[num]
+	return
+}
+
+func SpecialChecked(num int) (special string) {
+	special = specialCheckedArr[num]
 	return
 }
