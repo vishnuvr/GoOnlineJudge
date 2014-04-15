@@ -50,7 +50,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Detail"] = one
 	} else {
-		http.Error(w, "resp error", 400)
+		http.Error(w, "resp error", 500)
 		return
 	}
 
@@ -230,7 +230,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Detail"] = one
 	} else {
-		http.Error(w, "resp error", 400)
+		http.Error(w, "resp error", response.StatusCode)
 		return
 	}
 
@@ -283,7 +283,7 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/news/detail/nid/"+strconv.Itoa(nid), http.StatusFound)
 	} else {
-		http.Error(w, "resp error", 400)
+		http.Error(w, "resp error", 500)
 		return
 	}
 }

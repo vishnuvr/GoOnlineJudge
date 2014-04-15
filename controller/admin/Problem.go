@@ -65,7 +65,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Detail"] = one
 	} else {
-		http.Error(w, "resp error", 400)
+		http.Error(w, "resp error", 500)
 		return
 	}
 
@@ -274,7 +274,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Detail"] = one
 	} else {
-		http.Error(w, "resp error", 400)
+		http.Error(w, "resp error", 500)
 		return
 	}
 
@@ -350,7 +350,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/problem/detail/nid/"+strconv.Itoa(pid), http.StatusFound)
 	} else {
-		http.Error(w, "resp error", 400)
+		http.Error(w, "resp error", 500)
 		return
 	}
 }

@@ -26,3 +26,8 @@ var ModuleNA = 0 //None
 var ModuleP = 1  //None
 var ModuleC = 2  //Contest
 var ModuleE = 3  //Exercise
+
+var PrivilegeNA = 0 //None
+var PrivilegePU = 1 //Primary User
+var PrivilegeSB = 2 //Source Broswer
+var PrivilegeAD = 3 //Admin
