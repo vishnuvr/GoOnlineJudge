@@ -20,8 +20,13 @@
           <a href="/"><img alt="Logo" src="/static/img/logo.png" /></a>
         </div>
         <div id="headerInfo" class="rfloat">
-          {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
-          {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
+          {{if .IsCurrentUser}}
+            [{{.CurrentUser}}]
+            <a class="user_signout" href="#">[Sign Out]</a>
+          {{else}}
+            {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
+            {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
+          {{end}}
         </div>
         <hr> 
         </div>
@@ -58,6 +63,22 @@
         </div>
       </div>
     </div>
+    <script type="text/javascript">
+    $('.user_signout').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({
+        type:'POST',
+        url:'/user/logout',
+        data:$(this).serialize(),
+        error: function() {
+          alert('Sign Out Failed.');
+        },
+        success: function() {
+          window.location.href = '/user/signin';
+        }
+      });
+    });
+    </script>
   </body>
 </html>
 

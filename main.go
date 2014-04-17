@@ -14,6 +14,7 @@ func main() {
 	http.HandleFunc("/ranklist/", ranklistHandler)
 	http.HandleFunc("/user/", userHandler)
 
+	http.HandleFunc("/admin/", adminHomeHandler)
 	http.HandleFunc("/admin/news/", adminNewsHandler)
 	http.HandleFunc("/admin/problem/", adminProblemHandler)
 

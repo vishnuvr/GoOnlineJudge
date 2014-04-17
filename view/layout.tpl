@@ -22,7 +22,7 @@
         </div>
         <div id="headerInfo" class="rfloat">
           {{if .IsCurrentUser}}
-            {{if .IsShowAdmin}}<a href="#">[Admin]</a>{{end}}
+            {{if .IsShowAdmin}}<a href="/admin/">[Admin]</a>{{end}}
             <a href="/user/detail/uid/{{.CurrentUser}}">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
           {{else}}
@@ -38,6 +38,18 @@
           <li>{{if .IsProblem}}<span>Problem</span>{{else}}<a href="/problem/list">Problem</a>{{end}}</li>
           <li>{{if .IsStatus}}<span>Status</span>{{else}}<a href="/status/list">Status</a>{{end}}</li>
           <li>{{if .IsRanklist}}<span>Ranklist</span>{{else}}<a href="/ranklist">Ranklist</a>{{end}}</li>
+          {{if .IsCurrentUser}}
+            <li><a href="/user/settings">Settings</a></li>
+            {{if .IsSettings}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/detail/uid/{{.CurrentUser}}">Detail</a>{{end}}</li>
+                <li>{{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/edit">Edit Info</a>{{end}}</li>
+                <li>{{if .IsSettingsPassword}}<span>Edit Password</span>{{else}}<a href="/user/pagepassword">Edit Password</a>{{end}}</li>
+              </ul>
+            </div>
+            {{end}}
+          {{end}}
         </ul>
       </div>
       <div id="body" class="span-22 last">

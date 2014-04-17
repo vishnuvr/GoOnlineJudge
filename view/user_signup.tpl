@@ -16,7 +16,7 @@
 		</div>
 		<div class="field">
 			<label for="user_password">Password</label><font color="red">*</font>
-			<font id="user_warning_password" color="red">[Password should contain at least six characters.]</font><br>
+			<font id="user_warning_password" color="red">Password should contain at least six characters.</font><br>
 			<input id="user_password" name="user[password]" size="30" type="password">
 		</div>	
 		<div class="field">
@@ -55,25 +55,25 @@
 				var json = eval('('+response.responseText+')');
 				if(json.uid != null) {
 					$('#user_handle').css({"border-color": "red"});
-					$('#user_warning_handle').text('['+json.uid+']');
+					$('#user_warning_handle').text(json.uid);
 				} else {
 					$('#user_warning_handle').text('');
 				}				
 				if(json.nick != null) {
 					$('#user_nick').css({"border-color": "red"});
-					$('#user_warning_nick').text('['+json.nick+']');
+					$('#user_warning_nick').text(json.nick);
 				} else {
 					$('#user_warning_nick').text('');
 				}
 				if(json.pwd != null) {
 					$('#user_password').css({"border-color": "red"});
-					$('#user_warning_password').text('['+json.pwd+']');
+					$('#user_warning_password').text(json.pwd);
 				} else {
 					$('#user_warning_password').text('');
 				}
 				if(json.pwdConfirm != null) {
 					$('#user_confirmPassword').css({"border-color": "red"});
-					$('#user_warning_confirmPassword').text('['+json.pwdConfirm+']');
+					$('#user_warning_confirmPassword').text(json.pwdConfirm);
 				} else {
 					$('#user_warning_confirmPassword').text('');
 				}				
