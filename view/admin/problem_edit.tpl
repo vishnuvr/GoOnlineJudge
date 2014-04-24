@@ -27,7 +27,7 @@
     </div>
     <div class="field">
       <label for="problem_special">Special Judge</label><br>
-      <input id="problem_special" name="special" type="checkbox" {{SpecialChecked .Special}} value="1">
+      <input id="problem_special" name="special" type="checkbox" {{if .Special}}checked{{end}} value="1">
     </div>
     <div class="field">
       <label for="problem_description">Description</label><br>

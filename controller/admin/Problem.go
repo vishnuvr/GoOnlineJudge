@@ -98,7 +98,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]*problem)
+	one := make(map[string][]problem)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
@@ -139,6 +139,8 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - Problem Add"
 	this.Data["IsProblem"] = true
 	this.Data["IsAdd"] = true
+	this.Data["IsEdit"] = true
+
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -278,7 +280,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial, "SpecialChecked": class.SpecialChecked})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
 	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -288,6 +290,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - Problem Edit"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
+	this.Data["IsEdit"] = true
 
 	err = t.Execute(w, this.Data)
 	if err != nil {

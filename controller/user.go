@@ -32,8 +32,6 @@ type UserController struct {
 	class.Controller
 }
 
-// URL /user/signin
-// Show Sign In Page
 func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Login")
 	this.Init(w, r)
@@ -47,7 +45,6 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "User Sign In"
 	this.Data["IsUserSignIn"] = true
-
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -55,8 +52,6 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /user/login
-// Execute User Login
 func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Login")
 	this.Init(w, r)
@@ -98,11 +93,8 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(response.StatusCode)
 		return
 	}
-
 }
 
-// URL /user/signup
-// Show Sign Up Page
 func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Sign Up")
 	this.Init(w, r)
@@ -123,8 +115,6 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /user/register
-// Execute User Register
 func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Register")
 	this.Init(w, r)
@@ -203,8 +193,6 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /user/logout
-// Execute User Logout
 func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Logout")
 	this.Init(w, r)
@@ -217,8 +205,6 @@ func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
-// URL /user/detail/uid/<uid>
-// Show User Detail
 func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Detail")
 	this.Init(w, r)
@@ -240,15 +226,29 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		this.Data["Detail"] = one
-	} else {
-		http.Error(w, "resp error", response.StatusCode)
+	}
+
+	response, err = http.Post(config.PostHost+"/solution/achieve/uid/"+uid, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
 		return
+	}
+
+	solvedList := make(map[string][]int)
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &solvedList)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["List"] = solvedList["list"]
 	}
 
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
-		http.Error(w, "tpl error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
@@ -260,13 +260,11 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		http.Error(w, "tpl error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 }
 
-// URL /user/settings
-// Show User Settings Page
 func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Settings")
 	this.Init(w, r)
@@ -306,8 +304,6 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /user/edit
-// Show User Edit Page
 func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Edit")
 	this.Init(w, r)
@@ -348,8 +344,6 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /user/update
-// Execute User Update
 func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Update")
 	this.Init(w, r)
@@ -394,8 +388,6 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// URL /user/pagepassword
-// Show password Page
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Password Page")
 	this.Init(w, r)
@@ -419,8 +411,6 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-// URL /user/password
-// Execute User Password
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Password")
 	this.Init(w, r)

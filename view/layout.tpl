@@ -9,12 +9,12 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
     <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
-    {{if .IsStatus}}
+    {{if .IsCode}}
       <link href="/static/prettify/prettify.css" rel="stylesheet" type="text/css" />
       <script src="/static/prettify/prettify.js" type="text/javascript"></script>
     {{end}}
   </head>
-  <body {{if .IsStatus}}onload="prettyPrint()"{{end}}>
+  <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
     <div class="container">
       <div id="pageHeader">
         <div id="logo" class="lfloat">
@@ -38,6 +38,16 @@
           <li>{{if .IsProblem}}<span>Problem</span>{{else}}<a href="/problem/list">Problem</a>{{end}}</li>
           <li>{{if .IsStatus}}<span>Status</span>{{else}}<a href="/status/list">Status</a>{{end}}</li>
           <li>{{if .IsRanklist}}<span>Ranklist</span>{{else}}<a href="/ranklist">Ranklist</a>{{end}}</li>
+          <li>{{if .IsContest}}<span>Contest</span>{{else}}<a href="/contest/list">Contest</a>{{end}}</li>
+          {{if .IsContestDetail}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsContestProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list/cid/{{.Cid}}">Problem</a>{{end}}</li>
+                <li>{{if .IsContestStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list/cid/{{.Cid}}">Status</a>{{end}}</li>
+                <li>{{if .IsContestRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist/cid/{{.Cid}}">Ranklist</a>{{end}}</li>
+              </ul>
+            </div>
+          {{end}}
           {{if .IsCurrentUser}}
             <li><a href="/user/settings">Settings</a></li>
             {{if .IsSettings}}

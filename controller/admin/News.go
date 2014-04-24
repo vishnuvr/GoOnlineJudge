@@ -70,7 +70,6 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "tpl error", 500)
 		return
 	}
-
 }
 
 func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +83,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]*news)
+	one := make(map[string][]news)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
@@ -125,6 +124,7 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - News Add"
 	this.Data["IsNews"] = true
 	this.Data["IsAdd"] = true
+	this.Data["IsEdit"] = true
 
 	err = t.Execute(w, this.Data)
 	if err != nil {
@@ -244,6 +244,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - News Edit"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = false
+	this.Data["IsEdit"] = true
 
 	err = t.Execute(w, this.Data)
 	if err != nil {

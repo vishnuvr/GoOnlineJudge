@@ -22,7 +22,6 @@
     </div>
   </form>
   <a href="/user/signup">Register a new account.</a>
-
   <script type="text/javascript">
   $('#new_user').submit( function(e) {
     e.preventDefault();
@@ -40,5 +39,4 @@
     });
   });
   </script>
-
 {{end}}

@@ -42,14 +42,55 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/problem/list", "application/json", nil)
+	args := this.ParseURL(r.URL.Path)
+	var url = "/problem/list"
+
+	if _, ok := args["page"]; !ok {
+		args["page"] = "1"
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/count", "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
 
-	one := make(map[string][]*problem)
+	c := make(map[string]int)
+	var count int
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &c)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		count = c["count"]
+	}
+	var pageCount = (count-1)/config.ProblemPerPage + 1
+
+	page, err := strconv.Atoi(args["page"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	if page > pageCount {
+		http.Error(w, "args error", 400)
+		return
+	}
+	url += "/offset/" + strconv.Itoa((page-1)*config.ProblemPerPage) + "/limit/" + strconv.Itoa(config.ProblemPerPage)
+	pageData := this.GetPage(page, pageCount)
+	for k, v := range pageData {
+		this.Data[k] = v
+	}
+
+	response, err = http.Post(config.PostHost+url, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	one := make(map[string][]problem)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
@@ -59,10 +100,18 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Problem"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus, "ShowExpire": class.ShowExpire})
+	funcMap := map[string]interface{}{
+		"ShowRatio":  class.ShowRatio,
+		"ShowStatus": class.ShowStatus,
+		"ShowExpire": class.ShowExpire,
+		"NumEqual":   class.NumEqual,
+		"NumAdd":     class.NumAdd,
+		"NumSub":     class.NumSub,
+	}
+	t := template.New("layout.tpl").Funcs(funcMap)
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
 	if err != nil {
-		http.Error(w, "tpl error", 500)
+		http.Error(w, "tpl1 error", 500)
 		return
 	}
 

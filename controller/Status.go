@@ -44,7 +44,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]*solution)
+	one := make(map[string][]solution)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
@@ -106,6 +106,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "View Code"
+	this.Data["IsCode"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

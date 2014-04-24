@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/config"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -90,4 +91,73 @@ func (this *Controller) DeleteSession(w http.ResponseWriter, r *http.Request, na
 		Name: name,
 	}
 	s.Delete(w, r)
+}
+
+func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {
+	ret = make(map[string]interface{})
+	log.Println(page, pageCount) /////////////
+	if page > 1 {
+		ret["IsPreviousPage"] = true
+	}
+	if page < pageCount {
+		ret["IsNextPage"] = true
+	}
+
+	var firstBlock bool = (page-config.PageMidLimit > config.PageHeadLimit+1)
+	var secondBlock bool = (page+config.PageMidLimit < pageCount-config.PageTailLimit)
+	log.Println(firstBlock, secondBlock) ///////////////
+	if firstBlock && secondBlock {
+		ret["IsPageHead"] = true
+		s1 := make([]int, 0, 0)
+		for i := 1; i <= config.PageHeadLimit; i++ {
+			s1 = append(s1, i)
+		}
+		ret["PageHeadList"] = s1
+		ret["IsPageMid"] = true
+		s2 := make([]int, 0, 0)
+		for i := page - config.PageMidLimit; i <= page+config.PageMidLimit; i++ {
+			s2 = append(s2, i)
+		}
+		ret["PageMidList"] = s2
+		ret["IsPageTail"] = true
+		ret["PageTailList"] = []int{pageCount - 1, pageCount}
+	} else if !firstBlock && !secondBlock {
+		ret["IsPageHead"] = true
+		s := make([]int, 0, 0)
+		for i := 1; i <= pageCount; i++ {
+			s = append(s, i)
+		}
+		ret["PageHeadList"] = s
+	} else if firstBlock && !secondBlock {
+		ret["IsPageHead"] = true
+		s1 := make([]int, 0, 0)
+		for i := 1; i <= config.PageHeadLimit; i++ {
+			s1 = append(s1, i)
+		}
+		ret["PageHeadList"] = s1
+		ret["IsPageMid"] = true
+		s2 := make([]int, 0, 0)
+		for i := page - config.PageMidLimit; i <= pageCount; i++ {
+			s2 = append(s2, i)
+		}
+		ret["PageMidList"] = s2
+	} else {
+		ret["IsPageHead"] = true
+		s1 := make([]int, 0, 0)
+		for i := 1; i <= page+config.PageMidLimit; i++ {
+			s1 = append(s1, i)
+		}
+		ret["PageHeadList"] = s1
+		ret["IsPageTail"] = true
+		s2 := make([]int, 0, 0)
+		for i := pageCount - config.PageTailLimit + 1; i <= pageCount; i++ {
+			s2 = append(s2, i)
+		}
+		ret["PageTailList"] = s2
+	}
+	ret["CurrentPage"] = int(page)
+	for k, v := range ret {
+		log.Println(k, v)
+	}
+	return
 }

@@ -9,9 +9,10 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
     <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
-    <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
-    <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
-    <script src="/static/js/operation.js" type="text/javascript"></script>
+    {{if .IsEdit}}
+      <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
+      <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
+    {{end}}
   </head>
   <body>
     <div class="container">
