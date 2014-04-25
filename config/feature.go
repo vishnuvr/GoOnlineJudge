@@ -6,10 +6,10 @@ package config
 // const SolutionPerPage = 50
 // const UserPerPage = 50
 const ProblemPerPage = 1
-const ContestPerPage = 3
-const ExercisePerPage = 3
-const SolutionPerPage = 3
-const UserPerPage = 3
+const ContestPerPage = 1
+const ExercisePerPage = 1
+const SolutionPerPage = 5
+const UserPerPage = 50
 
 const PageHeadLimit = 1
 const PageTailLimit = 1

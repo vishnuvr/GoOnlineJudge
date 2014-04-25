@@ -37,7 +37,71 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Status List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
+	args := this.ParseURL(r.URL.Path)
+	url := "/solution/list"
+	searchUrl := ""
+
+	// Search
+	if v, ok := args["uid"]; ok {
+		searchUrl += "/uid/" + v
+		this.Data["SearchUid"] = v
+	}
+	if v, ok := args["pid"]; ok {
+		searchUrl += "/pid/" + v
+		this.Data["SearchPid"] = v
+	}
+	if v, ok := args["judge"]; ok {
+		searchUrl += "/judge/" + v
+		this.Data["SearchJudge"+v] = v
+	}
+	if v, ok := args["language"]; ok {
+		searchUrl += "/language/" + v
+		this.Data["SearchLanguage"+v] = v
+	}
+	url += searchUrl
+	this.Data["URL"] = "/status/list" + searchUrl
+
+	// Page
+	if _, ok := args["page"]; !ok {
+		args["page"] = "1"
+	}
+
+	response, err := http.Post(config.PostHost+"/solution/count"+searchUrl+"/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	c := make(map[string]int)
+	var count int
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &c)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		count = c["count"]
+	}
+	var pageCount = (count-1)/config.SolutionPerPage + 1
+
+	page, err := strconv.Atoi(args["page"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	if page > pageCount {
+		http.Error(w, "args error", 400)
+		return
+	}
+	url += "/offset/" + strconv.Itoa((page-1)*config.SolutionPerPage) + "/limit/" + strconv.Itoa(config.SolutionPerPage)
+	pageData := this.GetPage(page, pageCount)
+	for k, v := range pageData {
+		this.Data[k] = v
+	}
+
+	//
+	response, err = http.Post(config.PostHost+url+"/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
@@ -54,7 +118,15 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus, "ShowJudge": class.ShowJudge, "ShowLanguage": class.ShowLanguage})
+	funcMap := map[string]interface{}{
+		"ShowStatus":   class.ShowStatus,
+		"ShowJudge":    class.ShowJudge,
+		"ShowLanguage": class.ShowLanguage,
+		"NumEqual":     class.NumEqual,
+		"NumAdd":       class.NumAdd,
+		"NumSub":       class.NumSub,
+	}
+	t := template.New("layout.tpl").Funcs(funcMap)
 	t, err = t.ParseFiles("view/layout.tpl", "view/status_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)

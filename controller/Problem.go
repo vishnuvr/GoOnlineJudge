@@ -43,13 +43,34 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path)
-	var url = "/problem/list"
+	url := "/problem/list"
+	searchUrl := ""
 
+	// Search
+	if v, ok := args["pid"]; ok {
+		searchUrl += "/pid/" + v
+		this.Data["SearchPid"] = true
+		this.Data["SearchValue"] = v
+	}
+	if v, ok := args["title"]; ok {
+		searchUrl += "/title/" + v
+		this.Data["SearchTitle"] = true
+		this.Data["SearchValue"] = v
+	}
+	if v, ok := args["source"]; ok {
+		searchUrl += "/source/" + v
+		this.Data["SearchSource"] = true
+		this.Data["SearchValue"] = v
+	}
+	url += searchUrl
+	this.Data["URL"] = url
+
+	// Page
 	if _, ok := args["page"]; !ok {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/count", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem/count"+searchUrl, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
@@ -67,7 +88,6 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		count = c["count"]
 	}
 	var pageCount = (count-1)/config.ProblemPerPage + 1
-
 	page, err := strconv.Atoi(args["page"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -83,6 +103,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data[k] = v
 	}
 
+	//
 	response, err = http.Post(config.PostHost+url, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {

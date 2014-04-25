@@ -4,7 +4,7 @@ import (
 	"GoOnlineJudge/config"
 	"encoding/json"
 	"io"
-	"log"
+	//"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -95,7 +95,6 @@ func (this *Controller) DeleteSession(w http.ResponseWriter, r *http.Request, na
 
 func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {
 	ret = make(map[string]interface{})
-	log.Println(page, pageCount) /////////////
 	if page > 1 {
 		ret["IsPreviousPage"] = true
 	}
@@ -105,7 +104,7 @@ func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interfa
 
 	var firstBlock bool = (page-config.PageMidLimit > config.PageHeadLimit+1)
 	var secondBlock bool = (page+config.PageMidLimit < pageCount-config.PageTailLimit)
-	log.Println(firstBlock, secondBlock) ///////////////
+
 	if firstBlock && secondBlock {
 		ret["IsPageHead"] = true
 		s1 := make([]int, 0, 0)
@@ -120,7 +119,11 @@ func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interfa
 		}
 		ret["PageMidList"] = s2
 		ret["IsPageTail"] = true
-		ret["PageTailList"] = []int{pageCount - 1, pageCount}
+		s3 := make([]int, 0, 0)
+		for i := pageCount - config.PageTailLimit + 1; i <= pageCount; i++ {
+			s3 = append(s3, i)
+		}
+		ret["PageTailList"] = s3
 	} else if !firstBlock && !secondBlock {
 		ret["IsPageHead"] = true
 		s := make([]int, 0, 0)
@@ -155,9 +158,7 @@ func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interfa
 		}
 		ret["PageTailList"] = s2
 	}
+
 	ret["CurrentPage"] = int(page)
-	for k, v := range ret {
-		log.Println(k, v)
-	}
 	return
 }
