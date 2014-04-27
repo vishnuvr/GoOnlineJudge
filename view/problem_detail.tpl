@@ -76,7 +76,7 @@
         <textarea id="code" name="code" style=""></textarea><div class="CodeMirror" style="display: none;"><div style="overflow: hidden; position: relative; width: 1px; height: 0px; top: 0px; left: 0px;"><textarea style="position: absolute; width: 2px;" wrap="off" autocorrect="off" autocapitalize="off"></textarea></div><div class="CodeMirror-scroll cm-s-default"><div style="position: relative; height: 1px;"><div style="position: absolute; height: 0; width: 0; overflow: hidden;"><pre><span></span></pre></div><div style="position: relative; top: 0px;"><div class="CodeMirror-gutter" style="height: 250px;"><div class="CodeMirror-gutter-text"><pre>1</pre></div></div><div class="CodeMirror-lines"><div style="position: relative; margin-left: 25px;"><pre class="CodeMirror-cursor" style="top: 0px; left: 0px;">&nbsp;</pre><div style=""><pre> </pre></div></div></div></div></div></div></div>
       </div>
       <div class="actions">
-        <input name="commit" type="submit" value="提交代码">
+        <input name="commit" type="submit" value="Submit">
       </div>
     </form></div>
 

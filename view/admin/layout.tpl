@@ -52,6 +52,15 @@
               </ul>
             </div>
           {{end}}
+          <li><a href="/admin/contest/list">Contest</a></li>
+          {{if .IsContest}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add">Add</a>{{end}}</li>
+              </ul>
+            </div>
+          {{end}}
         </ul>
       </div>
       <div id="body" class="span-22 last">

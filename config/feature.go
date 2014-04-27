@@ -40,3 +40,8 @@ const PrivilegeNA = 0 //None
 const PrivilegePU = 1 //Primary User
 const PrivilegeSB = 2 //Source Broswer
 const PrivilegeAD = 3 //Admin
+
+const EncryptNA = 0 //None
+const EncryptPB = 1 //Public
+const EncryptPT = 2 //Private
+const EncryptPW = 3 //Password

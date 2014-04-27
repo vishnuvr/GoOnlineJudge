@@ -306,7 +306,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	args := this.ParseURL(r.URL.Path[6:])
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
-		http.Error(w, "args error", 500)
+		http.Error(w, "args error", 400)
 		return
 	}
 
@@ -314,13 +314,13 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	one["title"] = r.FormValue("title")
 	time, err := strconv.Atoi(r.FormValue("time"))
 	if err != nil {
-		http.Error(w, "conv error", 400)
+		http.Error(w, "conv error", 500)
 		return
 	}
 	one["time"] = time
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
-		http.Error(w, "conv error", 400)
+		http.Error(w, "conv error", 500)
 		return
 	}
 	one["memory"] = memory
@@ -352,8 +352,5 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/problem/detail/nid/"+strconv.Itoa(pid), http.StatusFound)
-	} else {
-		http.Error(w, "resp error", 500)
-		return
 	}
 }
