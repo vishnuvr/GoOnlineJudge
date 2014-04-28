@@ -188,3 +188,52 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// URL /problem/submit/pid/<pid>
+
+func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
+	log.Println("Problem Submit")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path)
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	uid := this.Uid
+	if uid == "" {
+		w.WriteHeader(401)
+		return
+	}
+
+	one := make(map[string]interface{})
+	one["pid"] = pid
+	one["uid"] = uid
+	one["module"] = config.ModuleP
+	one["mid"] = config.ModuleP
+	/////TODO. Judge
+	one["judge"] = config.JudgePD
+	one["time"] = 1000
+	one["memory"] = 888
+	/////
+	one["code"] = r.FormValue("code")
+	one["len"] = this.GetCodeLen(len(r.FormValue("code")))
+	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+
+	reader, err := this.PostReader(&one)
+	if err != nil {
+		http.Error(w, "read error", 500)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/solution/insert", "application/json", reader)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	w.WriteHeader(200)
+}

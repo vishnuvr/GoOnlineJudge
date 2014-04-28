@@ -293,6 +293,9 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		EndTimeMinute   string
 		EndTimeSecond   string
 		ProblemList     string
+		IsPublic        bool
+		IsPrivate       bool
+		IsPassword      bool
 	}
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
@@ -315,6 +318,17 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		one.ProblemList = ""
 		for _, v := range one.List {
 			one.ProblemList += strconv.Itoa(v) + ";"
+		}
+		one.IsPublic = false
+		one.IsPrivate = false
+		one.IsPassword = false
+		switch one.Encrypt {
+		case config.EncryptPB:
+			one.IsPublic = true
+		case config.EncryptPT:
+			one.IsPrivate = true
+		case config.EncryptPW:
+			one.IsPassword = true
 		}
 		this.Data["Detail"] = one
 	} else {

@@ -1,15 +1,16 @@
 package config
 
-// const ProblemPerPage = 100
-// const ContestPerPage = 100
-// const ExercisePerPage = 100
-// const SolutionPerPage = 50
-// const UserPerPage = 50
-const ProblemPerPage = 1
-const ContestPerPage = 1
-const ExercisePerPage = 1
-const SolutionPerPage = 5
+const ProblemPerPage = 100
+const ContestPerPage = 100
+const ExercisePerPage = 100
+const SolutionPerPage = 50
 const UserPerPage = 50
+
+// const ProblemPerPage = 1
+// const ContestPerPage = 1
+// const ExercisePerPage = 1
+// const SolutionPerPage = 5
+// const UserPerPage = 50
 
 const PageHeadLimit = 1
 const PageTailLimit = 1

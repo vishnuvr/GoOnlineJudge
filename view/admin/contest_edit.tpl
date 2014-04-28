@@ -12,9 +12,9 @@
     <div class="field">
     	<label for="content_type" value="Public">Contest Type</label><br>
     	<select id="content_type" name="type">
-    		<option value="public">Public</option>
-    		<option value="private">Private</option>
-    		<option value="password">Password</option>
+    		<option value="public" {{if .IsPublic}}selected{{end}}>Public</option>
+    		<option value="private" {{if .IsPrivate}}selected{{end}}>Private</option>
+    		<option value="password" {{if .IsPassword}}selected{{end}}>Password</option>
     	</select>
     </div>
     <div class="field">

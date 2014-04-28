@@ -162,3 +162,8 @@ func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interfa
 	ret["CurrentPage"] = int(page)
 	return
 }
+
+func (this *Controller) GetCodeLen(strLen int) (codeLen int) {
+	codeLen = strLen
+	return
+}
