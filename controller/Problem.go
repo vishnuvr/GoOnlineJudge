@@ -217,6 +217,12 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["judge"] = config.JudgePD
 	one["time"] = 1000
 	one["memory"] = 888
+	response, err := http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/submit", "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
 	/////
 	one["code"] = r.FormValue("code")
 	one["len"] = this.GetCodeLen(len(r.FormValue("code")))
@@ -228,7 +234,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/solution/insert", "application/json", reader)
+	response, err = http.Post(config.PostHost+"/solution/insert", "application/json", reader)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
