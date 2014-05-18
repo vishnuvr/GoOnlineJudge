@@ -10,19 +10,19 @@
 		    <th class="header">Edit</th>
 		</tr>
 	</thead>
-		<tbody>
-			{{with .News}}
-				{{range .}}
-					<tr>
-						<td><a href="/admin/news/detail/nid/{{.Nid}}">{{.Title}}</a></td>
-						<td>{{.Create}}</td>
-						<td><a class="news_status" href="#" data-id="{{.Nid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
-						<td><a class="news_delete" href="#" data-id="{{.Nid}}">[Delete]</a></td>
-						<td><a class="news_edit" href="#" data-id="{{.Nid}}">[Edit]</a></td>
-					</tr>
-				{{end}}
+	<tbody>
+		{{with .News}}
+			{{range .}}
+				<tr>
+					<td><a href="/admin/news/detail/nid/{{.Nid}}">{{.Title}}</a></td>
+					<td>{{.Create}}</td>
+					<td><a class="news_status" href="#" data-id="{{.Nid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
+					<td><a class="news_delete" href="#" data-id="{{.Nid}}">[Delete]</a></td>
+					<td><a class="news_edit" href="#" data-id="{{.Nid}}">[Edit]</a></td>
+				</tr>
 			{{end}}
-		</tbody>
+		{{end}}
+	</tbody>
 </table>
 <script type="text/javascript">
 $('.news_status').on('click', function() {

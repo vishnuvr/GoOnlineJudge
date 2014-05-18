@@ -26,7 +26,13 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 		this.Data["IsCurrentUser"] = true
 		this.Data["CurrentUser"] = this.Uid
 
-		var err error
+		respone, err := http.Post(config.PostHost+"/user/operate/uid/"+this.Uid, "application/json", nil)
+		defer respone.Body.Close()
+		if err != nil {
+			http.Error(w, "post error", 400)
+			return
+		}
+
 		this.Privilege, err = strconv.Atoi(this.GetSession(w, r, "CurrentPrivilege"))
 		if err != nil {
 			http.Error(w, "args error", 400)

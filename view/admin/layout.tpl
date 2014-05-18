@@ -61,6 +61,15 @@
               </ul>
             </div>
           {{end}}
+          <li><a href="/admin/user/list">User</a></li>
+          {{if .IsUser}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/user/list">List</a>{{end}}</li>
+                <li>{{if .IsOnlineList}}<span>Online List</sapn>{{else}}<a href="/admin/user/onlinelist">Online List</a>{{end}}</li>
+              </ul>
+            </div>
+          {{end}}
         </ul>
       </div>
       <div id="body" class="span-22 last">

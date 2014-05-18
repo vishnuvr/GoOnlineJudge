@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type user struct {
@@ -24,8 +25,10 @@ type user struct {
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`
 
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:'create'`
+	Last   time.Time `json:"last"bson:"last"`
+	Logout bool      `json:"logout"bson:"logout"`
+	Status int       `json:"status"bson:"status"`
+	Create string    `json:"create"bson:'create'`
 }
 
 type UserController struct {
@@ -198,8 +201,24 @@ func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	if this.GetSession(w, r, "CurrentUser") != "" {
+		one := make(map[string]string)
+		one["uid"] = this.Uid
+
 		this.DeleteSession(w, r, "CurrentUser")
 		this.DeleteSession(w, r, "CurrentPrivilege")
+
+		reader, err := this.PostReader(&one)
+		if err != nil {
+			http.Error(w, "read error", 500)
+			return
+		}
+
+		response, err := http.Post(config.PostHost+"/user/logout", "application/json", reader)
+		defer response.Body.Close()
+		if err != nil {
+			http.Error(w, "post error", 400)
+			return
+		}
 	}
 
 	w.WriteHeader(200)
